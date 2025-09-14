@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Biaya Servis Motor Premium</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Google Fonts - Inter for clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlHYeY1V6Vl8I1TfBq52/l9+0b0Pj6B7vQ6p3i6A7o6z90j0I7w+z6bWwQ3a7pX4p6oXg+A7f7Q6g=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better aesthetics */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #f0f4f8; /* Light blue-gray track */
+        }
+        body::-webkit-scrollbar-thumb {
+            background: #60a5fa; /* Blue-400 thumb */
+            border-radius: 4px;
+        }
+        body::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6; /* Blue-500 on hover */
+        }
+        /* Focus styles for inputs/selects */
+        .form-element-focus:focus {
+            border-color: #3b82f6; /* Blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); /* Blue-500 with transparency */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-indigo-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-10 max-w-2xl w-full transform transition-all duration-500 hover:scale-[1.01] hover:shadow-3xl overflow-hidden">
+        
+        <div class="text-center mb-10 border-b pb-6 border-gray-100">
+            <div class="inline-block bg-blue-100 text-blue-600 rounded-full p-3 mb-4">
+                <i class="fas fa-motorcycle text-3xl"></i>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-2">
+                Kalkulator Servis Motor
+            </h1>
+            <p class="text-lg text-gray-600 max-w-md mx-auto">
+                Estimasi biaya servis dan sparepart motor Anda dengan mudah dan transparan.
+            </p>
+        </div>
+
+        <!-- Jenis Servis -->
+        <div class="mb-8 p-5 bg-blue-50 rounded-xl border border-blue-100">
+            <label for="serviceType" class="block text-gray-800 text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-cogs text-blue-500 mr-3 text-2xl"></i> Pilih Jenis Servis:
+            </label>
+            <div class="relative">
+                <select id="serviceType" class="form-select form-element-focus block w-full appearance-none bg-white border border-gray-300 rounded-lg py-3 px-4 pr-8 shadow-sm focus:outline-none focus:ring-2 text-lg transition duration-200 cursor-pointer">
+                    <option value="0" class="text-gray-500">-- Pilih Jenis Servis --</option>
+                    <option value="50000">Servis Ringan (50.000 IDR)</option>
+                    <option value="150000">Servis Lengkap (150.000 IDR)</option>
+                    <option value="250000">Turun Mesin (250.000 IDR)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.036 6.864 4.622 8.278z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tambah Sparepart -->
+        <div class="mb-10 p-5 bg-green-50 rounded-xl border border-green-100">
+            <label class="block text-gray-800 text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-tools text-green-600 mr-3 text-2xl"></i> Sparepart Tambahan:
+            </label>
+            <div id="sparepartList" class="space-y-4 mb-5">
+                <!-- Sparepart items will be added here -->
+            </div>
+            <button id="addSparepart" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 flex items-center justify-center space-x-2 transform hover:-translate-y-0.5">
+                <i class="fas fa-plus text-lg"></i>
+                <span>Tambah Sparepart</span>
+            </button>
+        </div>
+
+        <!-- Total Biaya -->
+        <div class="mt-8 pt-8 border-t-2 border-gray-100">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 text-center flex items-center justify-center space-x-3">
+                <i class="fas fa-receipt text-indigo-500"></i>
+                <span>Rincian Biaya Anda</span>
+            </h2>
+            <div class="bg-indigo-50 p-6 rounded-xl shadow-inner border border-indigo-200">
+                <p class="flex justify-between items-center text-xl text-gray-700 mb-3 pb-2 border-b border-indigo-100">
+                    <span class="font-medium flex items-center"><i class="fas fa-wrench mr-2 text-indigo-400"></i> Biaya Servis:</span>
+                    <span id="serviceCostDisplay" class="font-extrabold text-indigo-700">0 IDR</span>
+                </p>
+                <div id="sparepartSummary" class="mb-4">
+                    <!-- Sparepart summary items will be added here -->
+                </div>
+                <p class="flex justify-between items-center text-2xl text-gray-900 border-t-2 border-indigo-300 pt-5 mt-5 font-extrabold animate-pulse-once">
+                    <span><i class="fas fa-money-bill-wave text-green-600 mr-2"></i> Total Keseluruhan:</span>
+                    <span id="totalCostDisplay" class="font-extrabold text-green-700 text-3xl">0 IDR</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Ilustrasi motor -->
+        <div class="mt-12 text-center opacity-90">
+            <p class="text-gray-500 italic text-sm mb-4">Layanan servis motor terpercaya</p>
+            
+        </div>
+    </div>
+
+    <script>
+        const serviceTypeSelect = document.getElementById('serviceType');
+        const addSparepartBtn = document.getElementById('addSparepart');
+        const sparepartListDiv = document.getElementById('sparepartList');
+        const serviceCostDisplay = document.getElementById('serviceCostDisplay');
+        const sparepartSummaryDiv = document.getElementById('sparepartSummary');
+        const totalCostDisplay = document.getElementById('totalCostDisplay');
+
+        // Fungsi untuk menambahkan input sparepart baru
+        function addSparepartInput(name = '', price = '') {
+            const newSparepartDiv = document.createElement('div');
+            newSparepartDiv.className = 'flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 bg-white p-4 rounded-lg border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-md';
+            newSparepartDiv.innerHTML = `
+                <div class="flex-grow">
+                    <input type="text" placeholder="Nama Sparepart (contoh: Oli Mesin)" value="${name}" class="sparepart-name form-element-focus w-full p-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 text-md transition duration-200">
+                </div>
+                <div class="flex-shrink-0 w-full sm:w-auto">
+                    <input type="number" placeholder="Harga (IDR)" value="${price}" class="sparepart-price form-element-focus w-full sm:w-36 p-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 text-md transition duration-200">
+                </div>
+                <button type="button" class="remove-sparepart-btn flex-shrink-0 bg-red-500 hover:bg-red-600 text-white p-2.5 rounded-md transition duration-200 flex items-center justify-center space-x-1 focus:outline-none focus:ring-2 focus:ring-red-300 transform hover:scale-105">
+                    <i class="fas fa-times text-lg"></i>
+                    <span class="sm:hidden text-sm">Hapus</span>
+                </button>
+            `;
+            sparepartListDiv.appendChild(newSparepartDiv);
+
+            // Tambahkan event listener untuk tombol hapus
+            newSparepartDiv.querySelector('.remove-sparepart-btn').addEventListener('click', () => {
+                newSparepartDiv.remove();
+                calculateTotal(); // Hitung ulang setelah sparepart dihapus
+            });
+
+            // Tambahkan event listener untuk input nama dan harga sparepart
+            newSparepartDiv.querySelector('.sparepart-name').addEventListener('input', calculateTotal);
+            newSparepartDiv.querySelector('.sparepart-price').addEventListener('input', calculateTotal);
+        }
+
+        // Fungsi untuk menghitung total biaya
+        function calculateTotal() {
+            let serviceCost = parseFloat(serviceTypeSelect.value) || 0;
+            let sparepartCost = 0;
+            let sparepartSummaryHtml = '';
+
+            const sparepartInputs = sparepartListDiv.querySelectorAll('.flex.flex-col.sm\\:flex-row'); // Selector diperbarui
+            
+            sparepartInputs.forEach(item => {
+                const nameInput = item.querySelector('.sparepart-name');
+                const priceInput = item.querySelector('.sparepart-price');
+                
+                const name = nameInput.value.trim();
+                const price = parseFloat(priceInput.value) || 0;
+
+                if (name && price > 0) {
+                    sparepartCost += price;
+                    sparepartSummaryHtml += `
+                        <p class="flex justify-between items-center text-lg text-gray-700 ml-4 mb-2">
+                            <span class="flex items-center"><i class="fas fa-plus-circle text-gray-400 mr-2 text-sm"></i> ${name}:</span>
+                            <span class="font-medium text-gray-800">${formatCurrency(price)}</span>
+                        </p>
+                    `;
+                }
+            });
+
+            let totalCost = serviceCost + sparepartCost;
+
+            serviceCostDisplay.textContent = formatCurrency(serviceCost);
+            sparepartSummaryDiv.innerHTML = sparepartSummaryHtml || '<p class="text-lg text-gray-600 ml-4 italic py-2">Tidak ada sparepart tambahan.</p>';
+            totalCostDisplay.textContent = formatCurrency(totalCost);
+        }
+
+        // Fungsi untuk format mata uang IDR
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+        }
+
+        // Event Listeners
+        serviceTypeSelect.addEventListener('change', calculateTotal);
+        addSparepartBtn.addEventListener('click', () => addSparepartInput());
+
+        // Inisialisasi awal
+        addSparepartInput(); // Tambahkan satu input sparepart di awal
+        calculateTotal(); // Hitung total saat halaman dimuat
+    </script>
+</body>
+</html>
